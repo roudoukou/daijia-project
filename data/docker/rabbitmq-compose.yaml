@@ -1,0 +1,46 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3.12.0-management
+    container_name: rabbitmq-daijia
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: 123456
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - /data/rabbitmq:/var/lib/rabbitmq
+#
+#  nacos:
+#    image: nacos/nacos-server:${NACOS_VERSION}
+#    container_name: nacos-standalone-mysql
+#    env_file:
+#      - ../env/nacos-standlone-mysql.env
+#    volumes:
+#      - ./standalone-logs/:/home/nacos/logs
+#    ports:
+#      - "8848:8848"
+#      - "9848:9848"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#    restart: always
+#  mysql:
+#    container_name: mysql
+#    build:
+#      context: .
+#      dockerfile: ./image/mysql/8/Dockerfile
+#    image: example/mysql:8.0.30
+#    env_file:
+#      - ../env/mysql.env
+#    volumes:
+#      - ./mysql:/var/lib/mysql
+#    ports:
+#      - "3306:3306"
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+#      interval: 5s
+#      timeout: 10s
+#      retries: 10
