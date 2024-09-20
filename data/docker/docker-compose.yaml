@@ -44,3 +44,13 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
+
+  redis:
+    image: redis
+    container_name: redis-daijia
+    command: redis-server /etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    volumes:
+      - /data/redis/data:/data
+      - /data/redis/conf/redis.conf:/etc/redis/redis.conf
