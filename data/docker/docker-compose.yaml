@@ -12,21 +12,22 @@ services:
       - "15672:15672"
     volumes:
       - /data/rabbitmq:/var/lib/rabbitmq
-#
-#  nacos:
-#    image: nacos/nacos-server:${NACOS_VERSION}
-#    container_name: nacos-standalone-mysql
-#    env_file:
-#      - ../env/nacos-standlone-mysql.env
-#    volumes:
-#      - ./standalone-logs/:/home/nacos/logs
-#    ports:
-#      - "8848:8848"
-#      - "9848:9848"
-#    depends_on:
-#      mysql:
-#        condition: service_healthy
-#    restart: always
+
+  nacos:
+    image: nacos/nacos-server:v2.4.0
+    container_name: nacos-daijia
+    environment:
+      - MODE=standalone
+    volumes:
+      - /data/nacos/standalone-logs/:/home/nacos/logs
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: always
+
   mysql:
     container_name: mysql-daijia
     restart: always
@@ -46,7 +47,7 @@ services:
       retries: 10
 
   redis:
-    image: redis
+    image: redis:7
     container_name: redis-daijia
     command: redis-server /etc/redis/redis.conf
     ports:
@@ -54,3 +55,17 @@ services:
     volumes:
       - /data/redis/data:/data
       - /data/redis/conf/redis.conf:/etc/redis/redis.conf
+    restart: always
+
+  minio-s3:
+    image: bitnami/minio:2024
+    container_name: minio-daijia
+    hostname: minio
+    environment:
+      - MINIO_ROOT_USER=minio # change this
+      - MINIO_ROOT_PASSWORD=minio # change this
+    ports:
+      - 9001:9001/tcp
+    restart: always
+    volumes:
+      - /data/minio/data:/data

@@ -1,17 +1,24 @@
 #!/bin/bash
 
 RABBITMQ_CONTAINER_NAME="rabbitmq-daijia"
-CURRENT_DIR=$(pwd)
 
 # 判断当前的端口是否占用
 # 5672 15672 3306
 
 
 # mysql教程 https://juejin.cn/post/7221131955201572919
+# Github Awesome Docker Compose Examples  https://github.com/Haxxnet/Compose-Examples
 
-mkdir -p /data/{rabbitmq,mysql,nacos,redis}
+mkdir -p /data/{rabbitmq,mysql,nacos,redis,minio}
+
+mkdir -p /data/nacos/standalone-logs
+mkdir -p /data/minio/data
+mkdir -p /data/mysql/config
+mkdir -p /data/redis/config
 
 mkdir -p /opt/software
+
+
 
 
 # mysql配置
@@ -33,8 +40,8 @@ default-character-set=utf8mb4
 EOF
 
 # redis配置
-touch /data/redis/conf/redis.conf
-cat <<EOF > /data/redis/conf/redis.conf
+touch /data/redis/config/redis.conf
+cat <<EOF > /data/redis/config/redis.conf
 # Redis configuration file example.
 #
 # Note that in order to read the configuration file, Redis must be
@@ -1420,7 +1427,7 @@ docker cp /opt/software/rabbitmq_delayed_message_exchange-3.12.0.ez ${RABBITMQ_C
 
 docker exec -it ${RABBITMQ_CONTAINER_NAME} /bin/bash -c "rabbitmq-plugins enable rabbitmq_delayed_message_exchange"
 
-docker-compose -f docker-compose.yaml restart
+docker restart ${RABBITMQ_CONTAINER_NAME}
 
 
 
