@@ -3,8 +3,16 @@
 RABBITMQ_CONTAINER_NAME="rabbitmq-daijia"
 
 # 判断当前的端口是否占用
-# 5672 15672 3306
+# 5672 15672 3306 8848 9848 9001 6379
+PORTS=(5672 15672 3306 8848 9848 9001 6379)
 
+# 遍历每个端口并检查是否占用
+for PORT in "${PORTS[@]}"; do
+    if lsof -i:$PORT > /dev/null; then
+        echo "端口 $PORT 已被占用，脚本退出。"
+        exit 1
+    fi
+done
 
 # mysql教程 https://juejin.cn/post/7221131955201572919
 # Github Awesome Docker Compose Examples  https://github.com/Haxxnet/Compose-Examples
