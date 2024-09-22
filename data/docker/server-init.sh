@@ -38,7 +38,7 @@ user=mysql
 default-storage-engine=INNODB
 character-set-server=utf8
 character-set-client-handshake=FALSE
-collation-server=utf8mb4_general_ci
+#collation-server=utf8mb4_general_ci
 init_connect='SET NAMES utf8'
 max_connections=1000
 [client]
