@@ -6,3 +6,6 @@
 | minio     | 9001 | minioadmin | minioadmin |
 | redis     | 9001 |            |            |
 
+
+d3g5NGE2MjQ5MzU1YzAyNTU3
+OWYwNzgzNmI3N2ZlNDllNzY3NWQ4MWJjNDk0Yjc4YTk=
