@@ -2,6 +2,7 @@ package com.atguigu.daijia.customer.controller;
 
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.customer.service.CustomerService;
+import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
