@@ -30,6 +30,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private CustomerInfoFeignClient customerInfoFeignClient;
+
     @Override
     public String login(String code) {
         //1 拿着code进行远程调用，返回用户id
@@ -62,6 +65,38 @@ public class CustomerServiceImpl implements CustomerService {
 
         //7 返回token
         return token;
+    }
+
+    @Override
+    public CustomerLoginVo getCustomerLoginInfo(String token) {
+        //2 根据token查询redis
+        //3 查询token在redis里面对应用户id
+        String customerId =
+                (String)redisTemplate.opsForValue()
+                        .get(RedisConstant.USER_LOGIN_KEY_PREFIX + token);
+
+        if(StringUtils.isEmpty(customerId)) {
+            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        }
+//        if(!StringUtils.hasText(customerId)) {
+//            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+//        }
+
+        //4 根据用户id进行远程调用 得到用户信息
+        Result<CustomerLoginVo> customerLoginVoResult =
+                customerInfoFeignClient.getCustomerLoginInfo(Long.parseLong(customerId));
+
+        Integer code = customerLoginVoResult.getCode();
+        if(code != 200) {
+            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        }
+
+        CustomerLoginVo customerLoginVo = customerLoginVoResult.getData();
+        if(customerLoginVo == null) {
+            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        }
+        //5 返回用户信息
+        return customerLoginVo;
     }
 
 
