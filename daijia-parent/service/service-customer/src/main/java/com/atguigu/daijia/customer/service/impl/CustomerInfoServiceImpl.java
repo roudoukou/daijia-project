@@ -55,6 +55,7 @@ public class CustomerInfoServiceImpl extends ServiceImpl<CustomerInfoMapper, Cus
         if(customerInfo == null) {
             customerInfo = new CustomerInfo();
             customerInfo.setNickname(String.valueOf(System.currentTimeMillis()));
+            customerInfo.setPhone("16666666666");
             customerInfo.setAvatarUrl("https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg");
             customerInfo.setWxOpenId(openid);
             customerInfoMapper.insert(customerInfo);

@@ -1,5 +1,6 @@
 package com.atguigu.daijia.customer.controller;
 
+import com.atguigu.daijia.common.aop.GuiguLogin;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.customer.service.CustomerService;
 import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
@@ -27,20 +28,30 @@ public class CustomerController {
         return Result.ok(customerInfoService.login(code));
     }
 
+//     @Operation(summary = "获取客户登录信息")
+//     @GetMapping("/getCustomerLoginInfo")
+//     public Result<CustomerLoginVo>
+//     getCustomerLoginInfo(@RequestHeader(value = "token") String token) {
+//         //1 从请求头获取token字符串
+// //        HttpServletRequest request
+// //        String token = request.getHeader("token");
+//
+//         //调用service
+//         CustomerLoginVo customerLoginVo = customerInfoService.getCustomerLoginInfo(token);
+//
+//         return Result.ok(customerLoginVo);
+//     }
+
+    @GuiguLogin
     @Operation(summary = "获取客户登录信息")
     @GetMapping("/getCustomerLoginInfo")
     public Result<CustomerLoginVo>
-    getCustomerLoginInfo(@RequestHeader(value = "token") String token) {
-        //1 从请求头获取token字符串
-//        HttpServletRequest request
-//        String token = request.getHeader("token");
-
+    getCustomerLoginInfo() {
         //调用service
-        CustomerLoginVo customerLoginVo = customerInfoService.getCustomerLoginInfo(token);
+        CustomerLoginVo customerLoginVo = customerInfoService.getCustomerLoginInfo();
 
         return Result.ok(customerLoginVo);
     }
-
 
 }
 
