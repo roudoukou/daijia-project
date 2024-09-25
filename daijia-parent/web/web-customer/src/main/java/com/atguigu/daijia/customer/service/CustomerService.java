@@ -4,7 +4,6 @@ import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
 
 public interface CustomerService {
 
-
     String login(String code);
 
     CustomerLoginVo getCustomerLoginInfo(String token);
