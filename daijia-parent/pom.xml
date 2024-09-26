@@ -33,7 +33,8 @@
         <knife4j.version>4.1.0</knife4j.version>
         <fastjson.version>2.0.41</fastjson.version>
         <vod_api.version>2.1.4</vod_api.version>
-        <minio.version>8.5.2</minio.version>
+        <minio.version>8.5.12</minio.version>
+        <okhttp.version>4.12.0</okhttp.version>
         <jodatime.version>2.10.1</jodatime.version>
         <xxl-job.version>2.4.0</xxl-job.version>
 
@@ -106,6 +107,14 @@
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
             </dependency>
+
+            <!--okhttp-->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+
 
             <!--日期时间工具-->
             <dependency>
