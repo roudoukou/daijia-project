@@ -1,22 +1,16 @@
 package com.atguigu.daijia.driver.service.impl;
 
-import com.atguigu.daijia.common.execption.GuiguException;
-import com.atguigu.daijia.common.result.ResultCodeEnum;
 import com.atguigu.daijia.driver.config.TencentCloudProperties;
 import com.atguigu.daijia.driver.service.CosService;
 import com.atguigu.daijia.driver.service.OcrService;
-import com.atguigu.daijia.model.vo.driver.CosUploadVo;
 import com.atguigu.daijia.model.vo.driver.IdCardOcrVo;
-import com.tencentcloudapi.common.Credential;
-import com.tencentcloudapi.common.profile.ClientProfile;
-import com.tencentcloudapi.common.profile.HttpProfile;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -84,7 +78,27 @@ public class OcrServiceImpl implements OcrService {
         // } catch (Exception e) {
         //     throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         // }
-        return new IdCardOcrVo();
+        IdCardOcrVo idCardOcrVo = new IdCardOcrVo();
+        // 正面
+        idCardOcrVo.setName("黄磊");
+        Random random = new Random();
+        idCardOcrVo.setGender(random.nextBoolean() ? "1" : "2");
+        idCardOcrVo.setBirthday(DateTimeFormat.forPattern("yyyy/MM/dd").parseDateTime("1995/05/20").toDate());
+        idCardOcrVo.setIdcardNo("123456789012" + random.nextInt(10));
+        idCardOcrVo.setIdcardAddress("广州市天河区");
+
+        //写死
+        idCardOcrVo.setIdcardFrontUrl("http://example.com/front.jpg");
+        idCardOcrVo.setIdcardFrontShowUrl("http://example.com/show.jpg");
+
+        // 反面
+        String idcardExpireString = "202" + random.nextInt(10) + ".07.21";
+        idCardOcrVo.setIdcardExpire(DateTimeFormat.forPattern("yyyy.MM.dd").parseDateTime(idcardExpireString).toDate());
+
+        idCardOcrVo.setIdcardBackUrl("http://example.com/back.jpg");
+        idCardOcrVo.setIdcardBackShowUrl("http://example.com/show_back.jpg");
+
+        return idCardOcrVo;
     }
 
 
