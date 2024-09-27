@@ -5,6 +5,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.atguigu.daijia.common.constant.SystemConstant;
 import com.atguigu.daijia.common.execption.GuiguException;
 import com.atguigu.daijia.common.result.ResultCodeEnum;
+import com.atguigu.daijia.driver.config.MinioClientHelper;
 import com.atguigu.daijia.driver.mapper.DriverAccountMapper;
 import com.atguigu.daijia.driver.mapper.DriverInfoMapper;
 import com.atguigu.daijia.driver.mapper.DriverLoginLogMapper;
@@ -14,6 +15,7 @@ import com.atguigu.daijia.model.entity.driver.DriverAccount;
 import com.atguigu.daijia.model.entity.driver.DriverInfo;
 import com.atguigu.daijia.model.entity.driver.DriverLoginLog;
 import com.atguigu.daijia.model.entity.driver.DriverSet;
+import com.atguigu.daijia.model.vo.driver.DriverAuthInfoVo;
 import com.atguigu.daijia.model.vo.driver.DriverLoginVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -46,6 +48,8 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
 
     @Autowired
     private DriverLoginLogMapper driverLoginLogMapper;
+    @Autowired
+    private MinioClientHelper minioClientHelper;
 
     //小程序授权登录
     @Override
@@ -113,5 +117,29 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
         driverLoginVo.setIsArchiveFace(isArchiveFace);
         return driverLoginVo;
     }
+
+    //获取司机认证信息
+    @Override
+    public DriverAuthInfoVo getDriverAuthInfo(Long driverId) {
+        DriverInfo driverInfo = driverInfoMapper.selectById(driverId);
+        DriverAuthInfoVo driverAuthInfoVo = new DriverAuthInfoVo();
+        BeanUtils.copyProperties(driverInfo,driverAuthInfoVo);
+        driverAuthInfoVo.setIdcardBackShowUrl(minioClientHelper.getObjetPath(driverAuthInfoVo.getIdcardBackUrl()));
+        driverAuthInfoVo.setIdcardFrontShowUrl(minioClientHelper.getObjetPath(driverAuthInfoVo.getIdcardFrontUrl()));
+        driverAuthInfoVo.setIdcardHandShowUrl(minioClientHelper.getObjetPath(driverAuthInfoVo.getIdcardHandUrl()));
+        driverAuthInfoVo.setDriverLicenseFrontShowUrl(minioClientHelper.getObjetPath(driverAuthInfoVo.getDriverLicenseFrontUrl()));
+        driverAuthInfoVo.setDriverLicenseBackShowUrl(minioClientHelper.getObjetPath(driverAuthInfoVo.getDriverLicenseBackUrl()));
+        driverAuthInfoVo.setDriverLicenseHandShowUrl(minioClientHelper.getObjetPath(driverAuthInfoVo.getDriverLicenseHandUrl()));
+
+        // driverAuthInfoVo.setIdcardBackShowUrl(cosService.getImageUrl(driverAuthInfoVo.getIdcardBackUrl()));
+        // driverAuthInfoVo.setIdcardFrontShowUrl(cosService.getImageUrl(driverAuthInfoVo.getIdcardFrontUrl()));
+        // driverAuthInfoVo.setIdcardHandShowUrl(cosService.getImageUrl(driverAuthInfoVo.getIdcardHandUrl()));
+        // driverAuthInfoVo.setDriverLicenseFrontShowUrl(cosService.getImageUrl(driverAuthInfoVo.getDriverLicenseFrontUrl()));
+        // driverAuthInfoVo.setDriverLicenseBackShowUrl(cosService.getImageUrl(driverAuthInfoVo.getDriverLicenseBackUrl()));
+        // driverAuthInfoVo.setDriverLicenseHandShowUrl(cosService.getImageUrl(driverAuthInfoVo.getDriverLicenseHandUrl()));
+
+        return driverAuthInfoVo;
+    }
+
 
 }
