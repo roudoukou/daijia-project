@@ -85,7 +85,7 @@ public class OcrServiceImpl implements OcrService {
         //     throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         // }
 
-        String object = MINIO_DAIJIA_PATH + "/idcard" + UUID.randomUUID().toString() + ".png";
+        String object = MINIO_DAIJIA_PATH + "/idcard/" + UUID.randomUUID().toString() + ".png";
         minioClientHelper.uploadObject(object, file);
 
         IdCardOcrVo idCardOcrVo = new IdCardOcrVo();
@@ -168,7 +168,7 @@ public class OcrServiceImpl implements OcrService {
         //     throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         // }
 
-        String object = MINIO_DAIJIA_PATH + "/license" + UUID.randomUUID().toString() + ".png";
+        String object = MINIO_DAIJIA_PATH + "/license/" + UUID.randomUUID().toString() + ".png";
         minioClientHelper.uploadObject(object, file);
 
         DriverLicenseOcrVo driverLicenseOcrVo = new DriverLicenseOcrVo();

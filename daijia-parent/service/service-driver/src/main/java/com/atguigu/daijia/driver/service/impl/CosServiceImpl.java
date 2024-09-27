@@ -1,28 +1,23 @@
 package com.atguigu.daijia.driver.service.impl;
 
+import com.atguigu.daijia.driver.config.MinioClientHelper;
 import com.atguigu.daijia.driver.config.MinioProperties;
 import com.atguigu.daijia.driver.service.CosService;
 import com.atguigu.daijia.model.vo.driver.CosUploadVo;
-import com.qcloud.cos.COSClient;
-import com.qcloud.cos.http.HttpMethodName;
-import com.qcloud.cos.model.GeneratePresignedUrlRequest;
 import com.qcloud.cos.model.ObjectMetadata;
-import io.minio.*;
+import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.MinioClient;
 import io.minio.errors.*;
 import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,6 +33,8 @@ public class CosServiceImpl implements CosService {
 
     @Autowired
     private MinioProperties minioProperties;
+    @Autowired
+    private MinioClientHelper minioClientHelper;
 
     // @Autowired
     // private TencentCloudProperties tencentCloudProperties;
@@ -73,24 +70,27 @@ public class CosServiceImpl implements CosService {
         // PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest); //上传文件
         // cosClient.shutdown();
 
-        try {
-            PutObjectArgs putObjectArgs =
-                    PutObjectArgs.builder().bucket(minioProperties.getBucketName())
-                            .object(uploadPath).stream(
-                                    file.getInputStream(), file.getSize(), -1)
-                            // .contentType(fileType)
-                            .build();
-            minioClient.putObject(putObjectArgs);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        // try {
+        //     PutObjectArgs putObjectArgs =
+        //             PutObjectArgs.builder().bucket(minioProperties.getBucketName())
+        //                     .object(uploadPath).stream(
+        //                             file.getInputStream(), file.getSize(), -1)
+        //                     // .contentType(fileType)
+        //                     .build();
+        //     minioClient.putObject(putObjectArgs);
+        // } catch (Exception e) {
+        //     throw new RuntimeException(e);
+        // }
+
+        minioClientHelper.uploadObject(uploadPath, file);
 
         // 返回vo对象
         CosUploadVo cosUploadVo = new CosUploadVo();
         cosUploadVo.setUrl(uploadPath);
         // 图片临时访问url，回显使用
-        String imageUrl = this.getImageUrl(uploadPath);
-        cosUploadVo.setShowUrl(imageUrl);
+        // String imageUrl = this.getImageUrl(uploadPath);
+        // cosUploadVo.setShowUrl(imageUrl);
+        cosUploadVo.setShowUrl(minioClientHelper.getObjetPath(uploadPath));
         return cosUploadVo;
     }
 
