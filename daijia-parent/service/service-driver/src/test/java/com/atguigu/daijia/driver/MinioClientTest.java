@@ -1,6 +1,5 @@
 package com.atguigu.daijia.driver;
 
-import com.atguigu.daijia.driver.config.MinioClientBuilder;
 import com.atguigu.daijia.driver.config.MinioProperties;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
