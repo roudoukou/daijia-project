@@ -88,15 +88,36 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         }
       }
       console.log("onShow-chooseLocation", chooseLocation);
-      const location = chooseLocation.getLocation();
+      let location = chooseLocation.getLocation();
+      // 受不了了, 先把地址写死吧, 傻逼微信, 你这垃圾key我就获取了一次地址今天就没法用了
+      location = {"peiqi": "peiqi"}
       console.log("location", location);
       if (!location) {
         takeCarInfo.$reset();
         return;
       }
+      debugger
       if (flag.value === "from") {
+        location = {
+          "address": "广东省广州市五山路381路华南理工大学(五山校区)",
+          "city": "广州市",
+          "district": "天河区",
+          "latitude": 23.09,
+          "longitude": 113.30,
+          "name": "华南理工大学(五山校区)",
+          "province": "广东省"
+        }
         takeCarInfo.from = location;
       } else {
+        location = {
+          "address": "广东省广州市天河区天河路228号正佳广场",
+          "city": "广州市",
+          "district": "天河区",
+          "latitude": 23.13,
+          "longitude": 113.33,
+          "name": "正佳广场",
+          "province": "广东省"
+        }
         takeCarInfo.to = location;
       }
       if (takeCarInfo.from.address && takeCarInfo.to.address) {
