@@ -3,6 +3,7 @@ package com.atguigu.daijia.customer.controller;
 import com.atguigu.daijia.common.aop.GuiguLogin;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.customer.service.CustomerService;
+import com.atguigu.daijia.customer.service.OrderService;
 import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +22,9 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerInfoService;
+
+    @Autowired
+    OrderService orderService;
 
     @Operation(summary = "小程序授权登录")
     @GetMapping("/login/{code}")
@@ -51,6 +55,13 @@ public class CustomerController {
         CustomerLoginVo customerLoginVo = customerInfoService.getCustomerLoginInfo();
 
         return Result.ok(customerLoginVo);
+    }
+
+    @Operation(summary = "查询订单状态")
+    @GuiguLogin
+    @GetMapping("/getOrderStatus/{orderId}")
+    public Result<Integer> getOrderStatus(@PathVariable Long orderId) {
+        return Result.ok(orderService.getOrderStatus(orderId));
     }
 
 }
