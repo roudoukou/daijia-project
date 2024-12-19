@@ -2,6 +2,8 @@
 
 RABBITMQ_CONTAINER_NAME="rabbitmq-daijia"
 
+# 检查端口，然后把初始化的sql拷贝到 /data/mysql/init 目录下
+
 # 判断当前的端口是否占用
 # 5672 15672 3306 8848 9848 9001 6379
 PORTS=(5672 15672 3306 8848 9848 9001 6379)
@@ -22,7 +24,10 @@ mkdir -p /data/{rabbitmq,mysql,nacos,redis,minio}
 mkdir -p /data/nacos/standalone-logs
 mkdir -p /data/minio/data
 mkdir -p /data/mysql/config
+mkdir -p /data/mysql/init
 mkdir -p /data/redis/config
+
+mkdir -p /data/xxl-job/log
 
 mkdir -p /opt/software
 
@@ -41,6 +46,7 @@ character-set-client-handshake=FALSE
 #collation-server=utf8mb4_general_ci
 init_connect='SET NAMES utf8'
 max_connections=1000
+bind-address=0.0.0.0
 [client]
 default-character-set=utf8mb4
 [mysql]
