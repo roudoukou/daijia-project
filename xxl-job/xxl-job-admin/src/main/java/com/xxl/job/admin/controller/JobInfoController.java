@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -9,6 +10,8 @@ import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.thread.JobScheduleHelper;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
 import com.xxl.job.admin.service.XxlJobService;
@@ -20,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -150,6 +154,66 @@ public class JobInfoController {
 		}
 		return new ReturnT<List<String>>(result);
 
+	}
+
+	//自定义任务操作的方法
+//添加任务
+	@RequestMapping("/addJob")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<String> addJobInfo(HttpServletRequest request, @RequestBody XxlJobInfo jobInfo) {
+		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
+		return xxlJobService.add(jobInfo, loginUser);
+	}
+
+	//删除任务
+	@RequestMapping("/removeJob")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<String> removeJob(@RequestBody XxlJobInfo jobInfo) {
+		return xxlJobService.remove(jobInfo.getId());
+	}
+
+	//修改任务
+	@RequestMapping("/updateJob")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<String> updateJob(HttpServletRequest request, @RequestBody XxlJobInfo jobInfo) {
+		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
+		return xxlJobService.add(jobInfo, loginUser);
+	}
+
+	//停止任务
+	@RequestMapping("/stopJob")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<String> pauseJob(@RequestBody XxlJobInfo jobInfo) {
+		return xxlJobService.stop(jobInfo.getId());
+	}
+
+	//启动任务
+	@RequestMapping("/startJob")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<String> startJob(@RequestBody XxlJobInfo jobInfo) {
+		return xxlJobService.start(jobInfo.getId());
+	}
+
+	//添加并启动任务
+	@RequestMapping("/addAndStartJob")
+	@ResponseBody
+	@PermissionLimit(limit = false)
+	public ReturnT<String> addAndStartJob(HttpServletRequest request, @RequestBody XxlJobInfo jobInfo) {
+		XxlJobUser loginUser = PermissionInterceptor.getLoginUser(request);
+		ReturnT<String> result = xxlJobService.add(jobInfo, loginUser);
+
+		String content = result.getContent();
+		int id = Integer.parseInt(content);
+		xxlJobService.start(id);
+
+		//立即执行一次
+		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, jobInfo.getExecutorParam(), "");
+		return result;
 	}
 	
 }
